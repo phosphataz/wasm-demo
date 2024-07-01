@@ -1,0 +1,14 @@
+{
+  "name": "calc-wa",
+  "version": "0.1.0",
+  "files": [
+    "calc_wa_bg.wasm",
+    "calc_wa.js",
+    "calc_wa.d.ts"
+  ],
+  "module": "calc_wa.js",
+  "types": "calc_wa.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

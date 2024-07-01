@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>hello-wasm example</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            box-sizing: border-box;
+        }
+        #container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: whitesmoke;
+            height: 100vh;
+        }
+
+        input{
+            min-width: 200px;
+            border: 1px solid grey;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        button{
+            background-color: green;
+            color: white;
+            font-weight: bold;
+            border: 1px solid white;
+            padding: 10px;
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        #input{
+            width: fit-content;
+        }
+        #output{
+            width: fit-content;
+            display: none;
+        }
+
+    </style>
+  </head>
+  <body>
+    <div id="container">
+        <div id="input">
+            <h3>enter a number to multiply by 2 : </h3>
+            <input id="userInput" type="text" required>
+            <button onclick="getValue()">Calculate</button>
+        </div>
+
+        <h1 id="output">
+        </div>
+    </div>
+
+    <script>
+
+        function getValue(){
+            let userInputValue = document.getElementById("userInput").value;
+            let userInput = parseInt(userInputValue, 10);
+            
+            if(typeof userInput === "number" && !isNaN(userInput) ){
+
+                // WebAssembly is the api provided by the browser through javascript
+                // to work with wasm
+                // we fetch wasm module and use `instantiateStreaming` from WebAssembly api 
+                // to instanciate it
+                WebAssembly.instantiateStreaming(fetch("./calc_wa_bg.wasm"))
+                .then(({ instance }) => {
+
+                   // we access to the exposed wasm method with the instance.exports
+                   let result = instance.exports.mult_by2(userInput);
+
+                   let output = document.getElementById("output");
+
+                   output.innerText = result;
+                   output.style.display = "block";
+
+                   document.getElementById("userInput").value = '';
+                });
+            }
+        }
+    
+    </script>
+  </body>
+</html>
